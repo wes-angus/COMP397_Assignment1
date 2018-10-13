@@ -25,6 +25,8 @@ var scenes;
         // private methods
         // public methods
         Play.prototype.Start = function () {
+            this._ocean = new objects.Ocean();
+            this._slot = new objects.Slot();
             this.Main();
         };
         Play.prototype.Update = function () {
@@ -36,8 +38,9 @@ var scenes;
         Play.prototype.Reset = function () { };
         Play.prototype.Main = function () {
             // adds ocean to the scene
-            this._ocean = new objects.Ocean();
             this.addChild(this._ocean);
+            // adds slot machine to the scene
+            this.addChild(this._slot);
         };
         return Play;
     }(objects.Scene));

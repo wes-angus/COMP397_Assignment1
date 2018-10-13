@@ -22,17 +22,6 @@ var objects;
             _this._init(isCentered);
             return _this;
         }
-        Object.defineProperty(GameObject.prototype, "IsColliding", {
-            //public props
-            get: function () {
-                return this._isColliding;
-            },
-            set: function (newVal) {
-                this._isColliding = newVal;
-            },
-            enumerable: true,
-            configurable: true
-        });
         Object.defineProperty(GameObject.prototype, "Width", {
             get: function () {
                 return this._width;
@@ -73,7 +62,6 @@ var objects;
         GameObject.prototype._init = function (isCentered) {
             this.Width = this.getBounds().width;
             this.Height = this.getBounds().height;
-            this.IsColliding = false;
             if (isCentered) {
                 this.regX = this.HalfWidth;
                 this.regY = this.HalfHeight;

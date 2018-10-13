@@ -1,5 +1,8 @@
-module managers {
-    export class Slot {
+module objects {
+    export class Slot extends objects.GameObject {
+        //private vars
+        private _betLine: string[];
+
         //public props
         public playerMoney: number;
         public winnings: number;
@@ -14,11 +17,13 @@ module managers {
         public sevens: number;
         public blanks: number;
 
+        //constructor
         constructor() {
-            this.resetAll();
-            this.resetFruitTally();
+            super("slotMachine", false);
+            this.Start();
         }
-        //public methods
+
+        //static methods
         /* Utility function to check if a value falls within a range of bounds */
         public static checkRange(value, lowerBounds, upperBounds) {
             if (value >= lowerBounds && value <= upperBounds) {
@@ -29,9 +34,25 @@ module managers {
             }
         }
 
+        //public methods
+        public Reset(): void {
+            this.resetAll();
+            this.resetFruitTally();
+        }
+        public Destroy(): void {
+            
+        }
+        public Start(): void {
+            this.Reset();
+        }
+        public Update(): void {
+            this._betLine = this.Reels();
+            this.determineWinnings();
+        }
+
         //private methods
         /* Utility function to reset all fruit tallies */
-        private resetFruitTally() {
+        private resetFruitTally():void {
             this.grapes = 0;
             this.bananas = 0;
             this.oranges = 0;
@@ -43,7 +64,7 @@ module managers {
         }
 
         /* Utility function to reset the player stats */
-        private resetAll() {
+        private resetAll() :void {
             this.playerMoney = 1000;
             this.winnings = 0;
             this.jackpot = 5000;
@@ -51,7 +72,7 @@ module managers {
         }
 
         /* Check to see if the player won the jackpot */
-        private checkJackPot() {
+        private checkJackPot(): void {
             /* compare two random values */
             let jackPotTry = Math.floor(Math.random() * 51 + 1);
             let jackPotWin = Math.floor(Math.random() * 51 + 1);
@@ -63,7 +84,7 @@ module managers {
 
         /* When this function is called it determines the betLine results.
         e.g. Bar - Orange - Banana */
-        private Reels() {
+        private Reels(): string[] {
             let betLine = [" ", " ", " "];
             let outCome = [0, 0, 0];
 
@@ -108,20 +129,20 @@ module managers {
         }
 
         /* Utility function to show a win message and increase player money */
-        private showWinMessage() {
+        private showWinMessage():void {
             this.playerMoney += this.winnings;
             this.resetFruitTally();
             this.checkJackPot();
         }
 
         /* Utility function to show a loss message and reduce player money */
-        private showLossMessage() {
+        private showLossMessage():void {
             this.playerMoney -= this.playerBet;
             this.resetFruitTally();
         }
 
         /* This function calculates the player's winnings, if any */
-        private determineWinnings() {
+        private determineWinnings():void {
             if (this.blanks == 0) {
                 if (this.grapes == 3 || this.bells == 2) {
                     this.winnings = this.playerBet * 10;

@@ -5,15 +5,6 @@ module objects {
         private _height: number;
         private _halfWidth: number;
         private _halfHeight: number;
-        private _isColliding: boolean;
-
-        //public props
-        get IsColliding(): boolean {
-            return this._isColliding;
-        }
-        set IsColliding(newVal: boolean) {
-            this._isColliding = newVal;
-        }
 
         get Width(): number {
             return this._width;
@@ -49,7 +40,6 @@ module objects {
         private _init(isCentered: boolean): void {
             this.Width = this.getBounds().width;
             this.Height = this.getBounds().height;
-            this.IsColliding = false;
             
             if (isCentered) {
                 this.regX = this.HalfWidth;

@@ -1,11 +1,27 @@
-var managers;
-(function (managers) {
-    var Slot = /** @class */ (function () {
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    }
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var objects;
+(function (objects) {
+    var Slot = /** @class */ (function (_super) {
+        __extends(Slot, _super);
+        //constructor
         function Slot() {
-            this.resetAll();
-            this.resetFruitTally();
+            var _this = _super.call(this, "slotMachine", false) || this;
+            _this.Start();
+            return _this;
         }
-        //public methods
+        //static methods
         /* Utility function to check if a value falls within a range of bounds */
         Slot.checkRange = function (value, lowerBounds, upperBounds) {
             if (value >= lowerBounds && value <= upperBounds) {
@@ -14,6 +30,20 @@ var managers;
             else {
                 return !value;
             }
+        };
+        //public methods
+        Slot.prototype.Reset = function () {
+            this.resetAll();
+            this.resetFruitTally();
+        };
+        Slot.prototype.Destroy = function () {
+        };
+        Slot.prototype.Start = function () {
+            this.Reset();
+        };
+        Slot.prototype.Update = function () {
+            this._betLine = this.Reels();
+            this.determineWinnings();
         };
         //private methods
         /* Utility function to reset all fruit tallies */
@@ -145,7 +175,7 @@ var managers;
             }
         };
         return Slot;
-    }());
-    managers.Slot = Slot;
-})(managers || (managers = {}));
+    }(objects.GameObject));
+    objects.Slot = Slot;
+})(objects || (objects = {}));
 //# sourceMappingURL=slot.js.map
