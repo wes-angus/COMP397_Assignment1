@@ -153,7 +153,7 @@ var objects;
             if (jackPotTry == jackPotWin) {
                 this.playerMoney += this.jackpot;
                 this.jackpot = 1000;
-                this.messageLabel.text += "JACKPOT!";
+                this.messageLabel.text += " JACKPOT!";
                 this.updateJackpot();
             }
         };
