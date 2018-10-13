@@ -1,25 +1,23 @@
 module managers {
     export class Slot {
         //public props
-        public playerMoney = 1000;
-        public winnings = 0;
-        public jackpot = 5000;
-        public turn = 0;
-        public playerBet = 0;
-        public winNumber = 0;
-        public lossNumber = 0;
-        public spinResult;
-        public fruits = "";
-        public winRatio = 0;
-        public grapes = 0;
-        public bananas = 0;
-        public oranges = 0;
-        public cherries = 0;
-        public bars = 0;
-        public bells = 0;
-        public sevens = 0;
-        public blanks = 0;
+        public playerMoney: number;
+        public winnings: number;
+        public jackpot: number;
+        public playerBet: number;
+        public grapes: number;
+        public bananas: number;
+        public oranges: number;
+        public cherries: number;
+        public bars: number;
+        public bells: number;
+        public sevens: number;
+        public blanks: number;
 
+        constructor() {
+            this.resetAll();
+            this.resetFruitTally();
+        }
         //public methods
         /* Utility function to check if a value falls within a range of bounds */
         public static checkRange(value, lowerBounds, upperBounds) {
@@ -49,18 +47,14 @@ module managers {
             this.playerMoney = 1000;
             this.winnings = 0;
             this.jackpot = 5000;
-            this.turn = 0;
             this.playerBet = 0;
-            this.winNumber = 0;
-            this.lossNumber = 0;
-            this.winRatio = 0;
         }
 
         /* Check to see if the player won the jackpot */
         private checkJackPot() {
             /* compare two random values */
-            var jackPotTry = Math.floor(Math.random() * 51 + 1);
-            var jackPotWin = Math.floor(Math.random() * 51 + 1);
+            let jackPotTry = Math.floor(Math.random() * 51 + 1);
+            let jackPotWin = Math.floor(Math.random() * 51 + 1);
             if (jackPotTry == jackPotWin) {
                 this.playerMoney += this.jackpot;
                 this.jackpot = 1000;
@@ -70,8 +64,8 @@ module managers {
         /* When this function is called it determines the betLine results.
         e.g. Bar - Orange - Banana */
         private Reels() {
-            var betLine = [" ", " ", " "];
-            var outCome = [0, 0, 0];
+            let betLine = [" ", " ", " "];
+            let outCome = [0, 0, 0];
 
             for (var spin = 0; spin < 3; spin++) {
                 outCome[spin] = Math.floor((Math.random() * 65) + 1);
@@ -165,11 +159,9 @@ module managers {
                 else {
                     this.winnings = this.playerBet;
                 }
-                this.winNumber++;
                 this.showWinMessage();
             }
             else {
-                this.lossNumber++;
                 this.showLossMessage();
             }
         }

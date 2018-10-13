@@ -2,24 +2,8 @@ var managers;
 (function (managers) {
     var Slot = /** @class */ (function () {
         function Slot() {
-            //public props
-            this.playerMoney = 1000;
-            this.winnings = 0;
-            this.jackpot = 5000;
-            this.turn = 0;
-            this.playerBet = 0;
-            this.winNumber = 0;
-            this.lossNumber = 0;
-            this.fruits = "";
-            this.winRatio = 0;
-            this.grapes = 0;
-            this.bananas = 0;
-            this.oranges = 0;
-            this.cherries = 0;
-            this.bars = 0;
-            this.bells = 0;
-            this.sevens = 0;
-            this.blanks = 0;
+            this.resetAll();
+            this.resetFruitTally();
         }
         //public methods
         /* Utility function to check if a value falls within a range of bounds */
@@ -48,11 +32,7 @@ var managers;
             this.playerMoney = 1000;
             this.winnings = 0;
             this.jackpot = 5000;
-            this.turn = 0;
             this.playerBet = 0;
-            this.winNumber = 0;
-            this.lossNumber = 0;
-            this.winRatio = 0;
         };
         /* Check to see if the player won the jackpot */
         Slot.prototype.checkJackPot = function () {
@@ -158,11 +138,9 @@ var managers;
                 else {
                     this.winnings = this.playerBet;
                 }
-                this.winNumber++;
                 this.showWinMessage();
             }
             else {
-                this.lossNumber++;
                 this.showLossMessage();
             }
         };
