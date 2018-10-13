@@ -11,11 +11,9 @@
     let assetManifest = [
         {id: "startButton", src:"./Assets/images/startButton.png"},
         {id: "restartButton", src:"./Assets/images/restartButton.png"},
+        {id: "spinButton", src:"./Assets/images/spinButton.png"},
         {id: "ocean", src:"./Assets/images/ocean.gif"},
         {id: "slotMachine", src:"./Assets/images/slot-machine-clipart-transparent.png"},
-        {id: "engineSound", src:"./Assets/audio/engine.ogg"},
-        {id: "thunderSound", src:"./Assets/audio/thunder.ogg"},
-        {id: "yaySound", src:"./Assets/audio/yay.ogg"}
     ];
 
 

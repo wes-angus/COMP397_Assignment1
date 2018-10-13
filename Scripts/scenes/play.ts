@@ -17,14 +17,11 @@ namespace scenes {
 
     // public methods
     public Start(): void {
-      this._betLabel = new objects.Label("Bet: $000", "32px", "Arial", "#0000FF", 20, 30, false);
-      this._moneyLabel = new objects.Label("Money: $0000", "32px", "Arial", "#0000FF", 420, 30, false);
-      this._slot = new objects.Slot(this._moneyLabel);
+      this._slot = new objects.Slot();
       this.Main();
     }
 
     public Update(): void {
-      this._slot.updateBet(this._betLabel);
       this._slot.Update();
     }
 
@@ -37,8 +34,11 @@ namespace scenes {
     public Main(): void {
       // adds slot machine to the scene
       this.addChild(this._slot);
-      this.addChild(this._betLabel);
-      this.addChild(this._moneyLabel);
+      this.addChild(this._slot.betLabel);
+      this.addChild(this._slot.moneyLabel);
+      this.addChild(this._slot.jackpotLabel);
+      this.addChild(this._slot.spinButton);
+      this.addChild(this._slot.messageLabel);
     }
   }
 }

@@ -16,10 +16,11 @@ var objects;
     var Slot = /** @class */ (function (_super) {
         __extends(Slot, _super);
         //constructor
-        function Slot(moneyLabel) {
+        function Slot() {
             var _this = _super.call(this, "slotMachine", false) || this;
+            _this.Grayscale = new createjs.ColorMatrixFilter(new createjs.ColorMatrix().adjustSaturation(-100));
+            _this.GrayscaleB = new createjs.ColorFilter(0.3, 0.3, 0.3);
             _this.Start();
-            _this.updateMoney(moneyLabel);
             return _this;
         }
         //static methods
@@ -40,35 +41,57 @@ var objects;
         Slot.prototype.Destroy = function () {
         };
         Slot.prototype.Start = function () {
-            this.init();
             this.Reset();
+            this.init();
         };
         Slot.prototype.Update = function () {
-        };
-        Slot.prototype.updateBet = function (betLabel) {
-            if (this.betString != this.betInput.value) {
-                this.betString = this.betInput.value;
-                this.playerBet = parseInt(this.betString);
-                if (this.playerBet <= this.playerMoney && this.playerBet > 0) {
-                    betLabel.text = "Bet $" + this.betString;
-                }
-                else {
-                    betLabel.text = "Bet Invalid";
-                }
-            }
-        };
-        Slot.prototype.updateMoney = function (moneyLabel) {
-            moneyLabel.text = "Money $" + this.playerMoney;
-        };
-        Slot.prototype.spinClick = function (moneyLabel) {
-            this.betLine = this.Reels();
-            this.determineWinnings(moneyLabel);
+            this.updateBet();
         };
         //private methods
         Slot.prototype.init = function () {
+            var _this = this;
             this.x = 20;
-            this.y = 20;
+            this.y = 40;
             this.betInput = document.getElementsByTagName("input")[0];
+            this.betLabel = new objects.Label("Bet: $000", "32px", "Arial", "#0000FF", 20, 60, false);
+            this.moneyLabel = new objects.Label("Money: $" + this.playerMoney, "32px", "Arial", "#0000FF", 420, 60, false);
+            this.jackpotLabel = new objects.Label("$" + this.jackpot, "32px", "Arial", "#0000FF", 300, 20, true);
+            this.spinButton = new objects.Button("spinButton", 580, 600, true);
+            this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FF0000", 20, 600, false);
+            this.spinButton.on("click", function () {
+                _this.spinClick();
+            });
+            this.updateBet();
+        };
+        Slot.prototype.validateBet = function () {
+            if (this.playerBet <= this.playerMoney && this.playerBet > 0) {
+                this.betLabel.text = "Bet $" + this.betString;
+                this.spinButton.mouseEnabled = true;
+                this.spinButton.filters = [];
+                this.spinButton.cache(this.x - this.HalfWidth, this.y - this.HalfHeight, this.Width, this.Height);
+            }
+            else {
+                this.betLabel.text = "Bet Invalid";
+                this.spinButton.mouseEnabled = false;
+                this.spinButton.filters = [
+                    this.Grayscale
+                ];
+                this.spinButton.cache(this.x - this.HalfWidth, this.y - this.HalfHeight, this.Width, this.Height);
+            }
+        };
+        Slot.prototype.updateBet = function () {
+            if (this.betString != this.betInput.value) {
+                this.betString = this.betInput.value;
+                this.playerBet = parseInt(this.betString);
+                this.validateBet();
+            }
+        };
+        Slot.prototype.updateMoney = function () {
+            this.moneyLabel.text = "Money $" + this.playerMoney;
+            this.validateBet();
+        };
+        Slot.prototype.updateJackpot = function () {
+            this.jackpotLabel.text = "$" + this.jackpot;
         };
         /* Utility function to reset all fruit tallies */
         Slot.prototype.resetFruitTally = function () {
@@ -96,6 +119,7 @@ var objects;
             if (jackPotTry == jackPotWin) {
                 this.playerMoney += this.jackpot;
                 this.jackpot = 1000;
+                this.updateJackpot();
             }
         };
         /* When this function is called it determines the betLine results.
@@ -143,22 +167,24 @@ var objects;
             return betLine;
         };
         /* Utility function to show a win message and increase player money */
-        Slot.prototype.showWinMessage = function (moneyLabel) {
+        Slot.prototype.showWinMessage = function () {
             this.playerMoney += this.winnings;
-            this.updateMoney(moneyLabel);
+            this.updateMoney();
             this.resetFruitTally();
             this.checkJackPot();
-            return "You Won: $" + this.winnings;
+            this.updateBet();
+            this.messageLabel.text = "You Won: $" + this.winnings;
         };
         /* Utility function to show a loss message and reduce player money */
-        Slot.prototype.showLossMessage = function (moneyLabel) {
+        Slot.prototype.showLossMessage = function () {
             this.playerMoney -= this.playerBet;
-            this.updateMoney(moneyLabel);
+            this.updateMoney();
             this.resetFruitTally();
-            return "You Lost...";
+            this.updateBet();
+            this.messageLabel.text = "You Lost...";
         };
         /* This function calculates the player's winnings, if any */
-        Slot.prototype.determineWinnings = function (moneyLabel) {
+        Slot.prototype.determineWinnings = function () {
             if (this.blanks == 0) {
                 if (this.grapes == 3 || this.bells == 2) {
                     this.winnings = this.playerBet * 10;
@@ -196,11 +222,16 @@ var objects;
                 else {
                     this.winnings = this.playerBet;
                 }
-                this.showWinMessage(moneyLabel);
+                this.showWinMessage();
             }
             else {
-                this.showLossMessage(moneyLabel);
+                this.showLossMessage();
             }
+        };
+        Slot.prototype.spinClick = function () {
+            this.betLine = this.Reels();
+            console.log(this.betLine);
+            this.determineWinnings();
         };
         return Slot;
     }(objects.GameObject));

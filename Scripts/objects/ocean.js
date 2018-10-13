@@ -33,7 +33,7 @@ var objects;
         };
         //public methods
         Ocean.prototype.Reset = function () {
-            this.y = -640;
+            this.y = -760;
         };
         Ocean.prototype.Destroy = function () {
         };

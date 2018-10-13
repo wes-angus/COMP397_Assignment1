@@ -23,16 +23,24 @@ module objects {
         public playerMoney: number;
         public jackpot: number;
 
+        public betLabel: objects.Label;
+        public moneyLabel: objects.Label;
+        public jackpotLabel: objects.Label;
+        public spinButton: objects.Button;
+        public messageLabel: objects.Label;
+
+        public Grayscale = new createjs.ColorMatrixFilter(new createjs.ColorMatrix().adjustSaturation(-100));
+        public GrayscaleB = new createjs.ColorFilter(0.3, 0.3, 0.3);
+
         //constructor
-        constructor(moneyLabel: objects.Label) {
+        constructor() {
             super("slotMachine", false);
             this.Start();
-            this.updateMoney(moneyLabel);
         }
 
         //static methods
         /* Utility function to check if a value falls within a range of bounds */
-        public static checkRange(value, lowerBounds, upperBounds) {
+        public static checkRange(value: number, lowerBounds: number, upperBounds: number) {
             if (value >= lowerBounds && value <= upperBounds) {
                 return value;
             }
@@ -50,39 +58,61 @@ module objects {
 
         }
         public Start(): void {
-            this.init();
             this.Reset();
+            this.init();
         }
         public Update(): void {
-        }
-
-        public updateBet(betLabel: objects.Label) {
-            if (this.betString != this.betInput.value) {
-                this.betString = this.betInput.value;
-                this.playerBet = parseInt(this.betString);
-                if (this.playerBet <= this.playerMoney && this.playerBet > 0) {
-                    betLabel.text = "Bet $" + this.betString;
-                }
-                else {
-                    betLabel.text = "Bet Invalid";
-                }
-            }
-        }
-
-        public updateMoney(moneyLabel: objects.Label) {
-            moneyLabel.text = "Money $" + this.playerMoney;
-        }
-
-        public spinClick(moneyLabel: objects.Label) {
-            this.betLine = this.Reels();
-            this.determineWinnings(moneyLabel);
+            this.updateBet();
         }
 
         //private methods
         private init() {
             this.x = 20;
-            this.y = 20;
+            this.y = 40;
             this.betInput = document.getElementsByTagName("input")[0];
+            this.betLabel = new objects.Label("Bet: $000", "32px", "Arial", "#0000FF", 20, 60, false);
+            this.moneyLabel = new objects.Label("Money: $" + this.playerMoney, "32px", "Arial", "#0000FF", 420, 60, false);
+            this.jackpotLabel = new objects.Label("$" + this.jackpot, "32px", "Arial", "#0000FF", 300, 20, true);
+            this.spinButton = new objects.Button("spinButton", 580, 600, true);
+            this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FF0000", 20, 600, false);
+            this.spinButton.on("click", () => {
+                this.spinClick();
+            });
+            this.updateBet();
+        }
+
+        private validateBet() {
+            if (this.playerBet <= this.playerMoney && this.playerBet > 0) {
+                this.betLabel.text = "Bet $" + this.betString;
+                this.spinButton.mouseEnabled = true;
+                this.spinButton.filters = [];
+                this.spinButton.cache(this.x - this.HalfWidth, this.y - this.HalfHeight, this.Width, this.Height);
+            }
+            else {
+                this.betLabel.text = "Bet Invalid";
+                this.spinButton.mouseEnabled = false;
+                this.spinButton.filters = [
+                    this.Grayscale
+                ];
+                this.spinButton.cache(this.x - this.HalfWidth, this.y - this.HalfHeight, this.Width, this.Height);
+            }
+        }
+
+        private updateBet() {
+            if (this.betString != this.betInput.value) {
+                this.betString = this.betInput.value;
+                this.playerBet = parseInt(this.betString);
+                this.validateBet();
+            }
+        }
+
+        private updateMoney() {
+            this.moneyLabel.text = "Money $" + this.playerMoney;
+            this.validateBet();
+        }
+
+        private updateJackpot() {
+            this.jackpotLabel.text = "$" + this.jackpot;
         }
 
         /* Utility function to reset all fruit tallies */
@@ -113,12 +143,13 @@ module objects {
             if (jackPotTry == jackPotWin) {
                 this.playerMoney += this.jackpot;
                 this.jackpot = 1000;
+                this.updateJackpot();
             }
         }
 
         /* When this function is called it determines the betLine results.
         e.g. Bar - Orange - Banana */
-        private Reels(): string[] {
+        public Reels(): string[] {
             let betLine = [" ", " ", " "];
             let outCome = [0, 0, 0];
 
@@ -163,24 +194,26 @@ module objects {
         }
 
         /* Utility function to show a win message and increase player money */
-        private showWinMessage(moneyLabel: objects.Label): string {
+        private showWinMessage(): void {
             this.playerMoney += this.winnings;
-            this.updateMoney(moneyLabel);
+            this.updateMoney();
             this.resetFruitTally();
             this.checkJackPot();
-            return "You Won: $" + this.winnings;
+            this.updateBet();
+            this.messageLabel.text = "You Won: $" + this.winnings;
         }
 
         /* Utility function to show a loss message and reduce player money */
-        private showLossMessage(moneyLabel: objects.Label): string {
+        private showLossMessage(): void {
             this.playerMoney -= this.playerBet;
-            this.updateMoney(moneyLabel);
+            this.updateMoney();
             this.resetFruitTally();
-            return "You Lost...";
+            this.updateBet();
+            this.messageLabel.text = "You Lost...";
         }
 
         /* This function calculates the player's winnings, if any */
-        private determineWinnings(moneyLabel: objects.Label): void {
+        public determineWinnings(): void {
             if (this.blanks == 0) {
                 if (this.grapes == 3 || this.bells == 2) {
                     this.winnings = this.playerBet * 10;
@@ -218,11 +251,17 @@ module objects {
                 else {
                     this.winnings = this.playerBet;
                 }
-                this.showWinMessage(moneyLabel);
+                this.showWinMessage();
             }
             else {
-                this.showLossMessage(moneyLabel);
+                this.showLossMessage();
             }
+        }
+
+        private spinClick() {
+            this.betLine = this.Reels();
+            console.log(this.betLine);
+            this.determineWinnings();
         }
     }
 }
