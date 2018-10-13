@@ -2,8 +2,6 @@ namespace scenes {
   export class Play extends objects.Scene {
     // private instance variables
     private _slot: objects.Slot;
-    private _betLabel: objects.Label;
-    private _moneyLabel: objects.Label;
 
     // public properties
 
@@ -38,7 +36,12 @@ namespace scenes {
       this.addChild(this._slot.moneyLabel);
       this.addChild(this._slot.jackpotLabel);
       this.addChild(this._slot.spinButton);
+      this.addChild(this._slot.resetButton);
+      this.addChild(this._slot.quitButton);
       this.addChild(this._slot.messageLabel);
+      this._slot.fruits.forEach(fruit => {
+        this.addChild(fruit);
+      });
     }
   }
 }

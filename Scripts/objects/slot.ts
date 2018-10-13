@@ -28,9 +28,11 @@ module objects {
         public jackpotLabel: objects.Label;
         public spinButton: objects.Button;
         public messageLabel: objects.Label;
+        public fruits: objects.Fruit[];
+        public resetButton: objects.Button;
+        public quitButton: objects.Button;
 
         public Grayscale = new createjs.ColorMatrixFilter(new createjs.ColorMatrix().adjustSaturation(-100));
-        public GrayscaleB = new createjs.ColorFilter(0.3, 0.3, 0.3);
 
         //constructor
         constructor() {
@@ -52,13 +54,17 @@ module objects {
         //public methods
         public Reset(): void {
             this.resetAll();
-            this.resetFruitTally();
+            this.updateMoney();
+            this.updateBet();
+            this.messageLabel.text = "Reset";
+            for (let i = 0; i < 3; i++) {
+                this.fruits[i].setFruit(config.Fruit.BLANK);
+            }
         }
         public Destroy(): void {
 
         }
         public Start(): void {
-            this.Reset();
             this.init();
         }
         public Update(): void {
@@ -67,6 +73,8 @@ module objects {
 
         //private methods
         private init() {
+            this.resetAll();
+            this.resetFruitTally();
             this.x = 20;
             this.y = 40;
             this.betInput = document.getElementsByTagName("input")[0];
@@ -74,8 +82,38 @@ module objects {
             this.moneyLabel = new objects.Label("Money: $" + this.playerMoney, "32px", "Arial", "#0000FF", 420, 60, false);
             this.jackpotLabel = new objects.Label("$" + this.jackpot, "32px", "Arial", "#0000FF", 300, 20, true);
             this.spinButton = new objects.Button("spinButton", 580, 600, true);
-            this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FF0000", 20, 540, false);
-            this.messageLabel.lineWidth = 600;
+            this.resetButton = new objects.Button("resetButton", 480, 590, true);
+            this.resetButton.on("click", () => {
+                console.log()
+                this.Reset();
+            });
+            this.quitButton = new objects.Button("quitButton", 480, 650, true);
+            this.quitButton.on("click", () => {
+                managers.Game.currentState = config.Scene.START;
+            });
+            this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FF0000", 12, 550, false);
+            this.messageLabel.lineWidth = 420;
+
+            this.fruits = new Array<objects.Fruit>();
+            let x = 0;
+            let y = 0;
+            for (let i = 0; i < 3; i++) {
+                switch (i) {
+                    case 0:
+                        x = 130;
+                        y = 390;
+                        break;
+                    case 1:
+                        x = 295;
+                        y = 390;
+                        break;
+                    case 2:
+                        x = 460;
+                        y = 390;
+                        break;
+                }
+                this.fruits.push(new objects.Fruit(x, y));
+            }
             this.spinButton.on("click", () => {
                 this.spinClick();
             });
@@ -84,7 +122,7 @@ module objects {
 
         private validateBet() {
             if (this.playerBet <= this.playerMoney && this.playerBet > 0) {
-                this.betLabel.text = "Bet $" + this.betString;
+                this.betLabel.text = "Bet: $" + this.betString;
                 this.spinButton.mouseEnabled = true;
                 this.spinButton.filters = [];
                 this.spinButton.cache(this.x - this.HalfWidth, this.y - this.HalfHeight, this.Width, this.Height);
@@ -92,9 +130,7 @@ module objects {
             else {
                 this.betLabel.text = "Bet Invalid";
                 this.spinButton.mouseEnabled = false;
-                this.spinButton.filters = [
-                    this.Grayscale
-                ];
+                this.spinButton.filters = [this.Grayscale];
                 this.spinButton.cache(this.x - this.HalfWidth, this.y - this.HalfHeight, this.Width, this.Height);
             }
         }
@@ -108,7 +144,7 @@ module objects {
         }
 
         private updateMoney() {
-            this.moneyLabel.text = "Money $" + this.playerMoney;
+            this.moneyLabel.text = "Money: $" + this.playerMoney;
             this.validateBet();
         }
 
@@ -134,6 +170,7 @@ module objects {
             this.winnings = 0;
             this.jackpot = 5000;
             this.playerBet = 0;
+            this.betString = "";
         }
 
         /* Check to see if the player won the jackpot */
@@ -183,11 +220,11 @@ module objects {
                         this.bars++;
                         break;
                     case Slot.checkRange(outCome[spin], 63, 64): //  3.1% probability
-                        betLine[spin] = "Bell";
+                        betLine[spin] = "Apple";
                         this.apples++;
                         break;
                     case Slot.checkRange(outCome[spin], 65, 65): //  1.5% probability
-                        betLine[spin] = "Seven";
+                        betLine[spin] = "Lemon";
                         this.lemons++;
                         break;
                 }
@@ -268,6 +305,9 @@ module objects {
         private spinClick() {
             this.betLine = this.Reels();
             console.log(this.betLine);
+            for (let i = 0; i < this.betLine.length; i++) {
+                this.fruits[i].setFruit(<config.Fruit>this.betLine[i]);
+            }
             this.determineWinnings();
         }
     }

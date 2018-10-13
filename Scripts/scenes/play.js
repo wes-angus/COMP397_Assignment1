@@ -36,13 +36,19 @@ var scenes;
         };
         Play.prototype.Reset = function () { };
         Play.prototype.Main = function () {
+            var _this = this;
             // adds slot machine to the scene
             this.addChild(this._slot);
             this.addChild(this._slot.betLabel);
             this.addChild(this._slot.moneyLabel);
             this.addChild(this._slot.jackpotLabel);
             this.addChild(this._slot.spinButton);
+            this.addChild(this._slot.resetButton);
+            this.addChild(this._slot.quitButton);
             this.addChild(this._slot.messageLabel);
+            this._slot.fruits.forEach(function (fruit) {
+                _this.addChild(fruit);
+            });
         };
         return Play;
     }(objects.Scene));

@@ -12,8 +12,19 @@
         {id: "startButton", src:"./Assets/images/startButton.png"},
         {id: "restartButton", src:"./Assets/images/restartButton.png"},
         {id: "spinButton", src:"./Assets/images/spinButton.png"},
+        {id: "resetButton", src:"./Assets/images/resetButton.png"},
+        {id: "quitButton", src:"./Assets/images/quitButton.png"},
         {id: "ocean", src:"./Assets/images/ocean.gif"},
         {id: "slotMachine", src:"./Assets/images/slot-machine-clipart-transparent.png"},
+        
+        //Fruits
+        {id: "apple", src:"./Assets/images/slot_machine_apple.png"},
+        {id: "banana", src:"./Assets/images/slot_machine_banana.png"},
+        {id: "bar", src:"./Assets/images/slot_machine_bar.png"},
+        {id: "cherries", src:"./Assets/images/slot_machine_cherries.png"},
+        {id: "grapes", src:"./Assets/images/slot_machine_grapes.png"},
+        {id: "lemon", src:"./Assets/images/slot_machine_lemon.png"},
+        {id: "orange", src:"./Assets/images/slot_machine_orange.png"}
     ];
 
 

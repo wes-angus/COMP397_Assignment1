@@ -46,7 +46,7 @@ module scenes {
             this.addChild(this._gameOverLabel2);
             this.addChild(this._restartButton);
 
-            this._restartButton.on("click", function () {
+            this._restartButton.on("click", () => {
                 managers.Game.currentState = config.Scene.PLAY;
             });
         }

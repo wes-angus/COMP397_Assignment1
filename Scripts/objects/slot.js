@@ -19,7 +19,6 @@ var objects;
         function Slot() {
             var _this = _super.call(this, "slotMachine", false) || this;
             _this.Grayscale = new createjs.ColorMatrixFilter(new createjs.ColorMatrix().adjustSaturation(-100));
-            _this.GrayscaleB = new createjs.ColorFilter(0.3, 0.3, 0.3);
             _this.Start();
             return _this;
         }
@@ -36,12 +35,16 @@ var objects;
         //public methods
         Slot.prototype.Reset = function () {
             this.resetAll();
-            this.resetFruitTally();
+            this.updateMoney();
+            this.updateBet();
+            this.messageLabel.text = "Reset";
+            for (var i = 0; i < 3; i++) {
+                this.fruits[i].setFruit(config.Fruit.BLANK);
+            }
         };
         Slot.prototype.Destroy = function () {
         };
         Slot.prototype.Start = function () {
-            this.Reset();
             this.init();
         };
         Slot.prototype.Update = function () {
@@ -50,6 +53,8 @@ var objects;
         //private methods
         Slot.prototype.init = function () {
             var _this = this;
+            this.resetAll();
+            this.resetFruitTally();
             this.x = 20;
             this.y = 40;
             this.betInput = document.getElementsByTagName("input")[0];
@@ -57,8 +62,37 @@ var objects;
             this.moneyLabel = new objects.Label("Money: $" + this.playerMoney, "32px", "Arial", "#0000FF", 420, 60, false);
             this.jackpotLabel = new objects.Label("$" + this.jackpot, "32px", "Arial", "#0000FF", 300, 20, true);
             this.spinButton = new objects.Button("spinButton", 580, 600, true);
-            this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FF0000", 20, 540, false);
-            this.messageLabel.lineWidth = 600;
+            this.resetButton = new objects.Button("resetButton", 480, 590, true);
+            this.resetButton.on("click", function () {
+                console.log();
+                _this.Reset();
+            });
+            this.quitButton = new objects.Button("quitButton", 480, 650, true);
+            this.quitButton.on("click", function () {
+                managers.Game.currentState = config.Scene.START;
+            });
+            this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FF0000", 12, 550, false);
+            this.messageLabel.lineWidth = 420;
+            this.fruits = new Array();
+            var x = 0;
+            var y = 0;
+            for (var i = 0; i < 3; i++) {
+                switch (i) {
+                    case 0:
+                        x = 130;
+                        y = 390;
+                        break;
+                    case 1:
+                        x = 295;
+                        y = 390;
+                        break;
+                    case 2:
+                        x = 460;
+                        y = 390;
+                        break;
+                }
+                this.fruits.push(new objects.Fruit(x, y));
+            }
             this.spinButton.on("click", function () {
                 _this.spinClick();
             });
@@ -66,7 +100,7 @@ var objects;
         };
         Slot.prototype.validateBet = function () {
             if (this.playerBet <= this.playerMoney && this.playerBet > 0) {
-                this.betLabel.text = "Bet $" + this.betString;
+                this.betLabel.text = "Bet: $" + this.betString;
                 this.spinButton.mouseEnabled = true;
                 this.spinButton.filters = [];
                 this.spinButton.cache(this.x - this.HalfWidth, this.y - this.HalfHeight, this.Width, this.Height);
@@ -74,9 +108,7 @@ var objects;
             else {
                 this.betLabel.text = "Bet Invalid";
                 this.spinButton.mouseEnabled = false;
-                this.spinButton.filters = [
-                    this.Grayscale
-                ];
+                this.spinButton.filters = [this.Grayscale];
                 this.spinButton.cache(this.x - this.HalfWidth, this.y - this.HalfHeight, this.Width, this.Height);
             }
         };
@@ -88,7 +120,7 @@ var objects;
             }
         };
         Slot.prototype.updateMoney = function () {
-            this.moneyLabel.text = "Money $" + this.playerMoney;
+            this.moneyLabel.text = "Money: $" + this.playerMoney;
             this.validateBet();
         };
         Slot.prototype.updateJackpot = function () {
@@ -111,6 +143,7 @@ var objects;
             this.winnings = 0;
             this.jackpot = 5000;
             this.playerBet = 0;
+            this.betString = "";
         };
         /* Check to see if the player won the jackpot */
         Slot.prototype.checkJackPot = function () {
@@ -157,11 +190,11 @@ var objects;
                         this.bars++;
                         break;
                     case Slot.checkRange(outCome[spin], 63, 64): //  3.1% probability
-                        betLine[spin] = "Bell";
+                        betLine[spin] = "Apple";
                         this.apples++;
                         break;
                     case Slot.checkRange(outCome[spin], 65, 65): //  1.5% probability
-                        betLine[spin] = "Seven";
+                        betLine[spin] = "Lemon";
                         this.lemons++;
                         break;
                 }
@@ -238,6 +271,9 @@ var objects;
         Slot.prototype.spinClick = function () {
             this.betLine = this.Reels();
             console.log(this.betLine);
+            for (var i = 0; i < this.betLine.length; i++) {
+                this.fruits[i].setFruit(this.betLine[i]);
+            }
             this.determineWinnings();
         };
         return Slot;

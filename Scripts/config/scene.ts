@@ -5,5 +5,4 @@ module config {
         OVER,
         SCENE_COUNT
     }
-
 }
