@@ -34,7 +34,7 @@
         createjs.Ticker.framerate = 60; // game will run at 60fps
         createjs.Ticker.on("tick", Update);
 
-        currentState = config.Scene.OVER;
+        currentState = config.Scene.START;
         managers.Game.currentState = currentState;
         Main();
     }

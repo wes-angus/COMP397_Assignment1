@@ -26,7 +26,7 @@ var scenes;
         // public methods
         Over.prototype.Start = function () {
             this._ocean = new objects.Ocean();
-            this._gameOverLabel = new objects.Label("Game Over!", "60px", "Consolas", "#FFFF00", 320, 160, true);
+            this._gameOverLabel = new objects.Label("Out of Money!", "60px", "Consolas", "#FFFF00", 320, 160, true);
             this._gameOverLabel2 = new objects.Label("Would you like to play again?", "32px", "Consolas", "#FFFF00", 320, 240, true);
             this._restartButton = new objects.Button("restartButton", 320, 360, true);
             this.Main();

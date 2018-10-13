@@ -57,7 +57,8 @@ var objects;
             this.moneyLabel = new objects.Label("Money: $" + this.playerMoney, "32px", "Arial", "#0000FF", 420, 60, false);
             this.jackpotLabel = new objects.Label("$" + this.jackpot, "32px", "Arial", "#0000FF", 300, 20, true);
             this.spinButton = new objects.Button("spinButton", 580, 600, true);
-            this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FF0000", 20, 600, false);
+            this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FF0000", 20, 540, false);
+            this.messageLabel.lineWidth = 600;
             this.spinButton.on("click", function () {
                 _this.spinClick();
             });
@@ -100,8 +101,8 @@ var objects;
             this.oranges = 0;
             this.cherries = 0;
             this.bars = 0;
-            this.bells = 0;
-            this.sevens = 0;
+            this.apples = 0;
+            this.lemons = 0;
             this.blanks = 0;
         };
         /* Utility function to reset the player stats */
@@ -119,6 +120,7 @@ var objects;
             if (jackPotTry == jackPotWin) {
                 this.playerMoney += this.jackpot;
                 this.jackpot = 1000;
+                this.messageLabel.text += "JACKPOT!";
                 this.updateJackpot();
             }
         };
@@ -156,11 +158,11 @@ var objects;
                         break;
                     case Slot.checkRange(outCome[spin], 63, 64): //  3.1% probability
                         betLine[spin] = "Bell";
-                        this.bells++;
+                        this.apples++;
                         break;
                     case Slot.checkRange(outCome[spin], 65, 65): //  1.5% probability
                         betLine[spin] = "Seven";
-                        this.sevens++;
+                        this.lemons++;
                         break;
                 }
             }
@@ -169,27 +171,32 @@ var objects;
         /* Utility function to show a win message and increase player money */
         Slot.prototype.showWinMessage = function () {
             this.playerMoney += this.winnings;
+            this.messageLabel.text = "You Won: $" + this.winnings;
             this.updateMoney();
             this.resetFruitTally();
             this.checkJackPot();
             this.updateBet();
-            this.messageLabel.text = "You Won: $" + this.winnings;
         };
         /* Utility function to show a loss message and reduce player money */
         Slot.prototype.showLossMessage = function () {
             this.playerMoney -= this.playerBet;
-            this.updateMoney();
-            this.resetFruitTally();
-            this.updateBet();
-            this.messageLabel.text = "You Lost...";
+            if (this.playerMoney < 1) {
+                managers.Game.currentState = config.Scene.OVER;
+            }
+            else {
+                this.messageLabel.text = "You Lost...";
+                this.updateMoney();
+                this.resetFruitTally();
+                this.updateBet();
+            }
         };
         /* This function calculates the player's winnings, if any */
         Slot.prototype.determineWinnings = function () {
             if (this.blanks == 0) {
-                if (this.grapes == 3 || this.bells == 2) {
+                if (this.grapes == 3 || this.apples == 2) {
                     this.winnings = this.playerBet * 10;
                 }
-                else if (this.bananas == 3 || this.sevens == 2) {
+                else if (this.bananas == 3 || this.lemons == 2) {
                     this.winnings = this.playerBet * 20;
                 }
                 else if (this.oranges == 3) {
@@ -201,10 +208,10 @@ var objects;
                 else if (this.bars == 3) {
                     this.winnings = this.playerBet * 50;
                 }
-                else if (this.bells == 3) {
+                else if (this.apples == 3) {
                     this.winnings = this.playerBet * 75;
                 }
-                else if (this.sevens == 3) {
+                else if (this.lemons == 3) {
                     this.winnings = this.playerBet * 100;
                 }
                 else if (this.grapes == 2 || this.bananas == 2) {
@@ -216,7 +223,7 @@ var objects;
                 else if (this.cherries == 2) {
                     this.winnings = this.playerBet * 4;
                 }
-                else if (this.bars == 2 || this.sevens == 1) {
+                else if (this.bars == 2 || this.lemons == 1) {
                     this.winnings = this.playerBet * 5;
                 }
                 else {
