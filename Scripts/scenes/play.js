@@ -25,22 +25,24 @@ var scenes;
         // private methods
         // public methods
         Play.prototype.Start = function () {
-            this._ocean = new objects.Ocean();
-            this._slot = new objects.Slot();
+            this._betLabel = new objects.Label("Bet: $000", "32px", "Arial", "#0000FF", 20, 30, false);
+            this._moneyLabel = new objects.Label("Money: $0000", "32px", "Arial", "#0000FF", 420, 30, false);
+            this._slot = new objects.Slot(this._moneyLabel);
             this.Main();
         };
         Play.prototype.Update = function () {
-            this._ocean.Update();
+            this._slot.updateBet(this._betLabel);
+            this._slot.Update();
         };
         Play.prototype.Destroy = function () {
             this.removeAllChildren();
         };
         Play.prototype.Reset = function () { };
         Play.prototype.Main = function () {
-            // adds ocean to the scene
-            this.addChild(this._ocean);
             // adds slot machine to the scene
             this.addChild(this._slot);
+            this.addChild(this._betLabel);
+            this.addChild(this._moneyLabel);
         };
         return Play;
     }(objects.Scene));

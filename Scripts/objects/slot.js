@@ -16,9 +16,10 @@ var objects;
     var Slot = /** @class */ (function (_super) {
         __extends(Slot, _super);
         //constructor
-        function Slot() {
+        function Slot(moneyLabel) {
             var _this = _super.call(this, "slotMachine", false) || this;
             _this.Start();
+            _this.updateMoney(moneyLabel);
             return _this;
         }
         //static methods
@@ -39,13 +40,36 @@ var objects;
         Slot.prototype.Destroy = function () {
         };
         Slot.prototype.Start = function () {
+            this.init();
             this.Reset();
         };
         Slot.prototype.Update = function () {
-            this._betLine = this.Reels();
-            this.determineWinnings();
+        };
+        Slot.prototype.updateBet = function (betLabel) {
+            if (this.betString != this.betInput.value) {
+                this.betString = this.betInput.value;
+                this.playerBet = parseInt(this.betString);
+                if (this.playerBet <= this.playerMoney && this.playerBet > 0) {
+                    betLabel.text = "Bet $" + this.betString;
+                }
+                else {
+                    betLabel.text = "Bet Invalid";
+                }
+            }
+        };
+        Slot.prototype.updateMoney = function (moneyLabel) {
+            moneyLabel.text = "Money $" + this.playerMoney;
+        };
+        Slot.prototype.spinClick = function (moneyLabel) {
+            this.betLine = this.Reels();
+            this.determineWinnings(moneyLabel);
         };
         //private methods
+        Slot.prototype.init = function () {
+            this.x = 20;
+            this.y = 20;
+            this.betInput = document.getElementsByTagName("input")[0];
+        };
         /* Utility function to reset all fruit tallies */
         Slot.prototype.resetFruitTally = function () {
             this.grapes = 0;
@@ -119,18 +143,22 @@ var objects;
             return betLine;
         };
         /* Utility function to show a win message and increase player money */
-        Slot.prototype.showWinMessage = function () {
+        Slot.prototype.showWinMessage = function (moneyLabel) {
             this.playerMoney += this.winnings;
+            this.updateMoney(moneyLabel);
             this.resetFruitTally();
             this.checkJackPot();
+            return "You Won: $" + this.winnings;
         };
         /* Utility function to show a loss message and reduce player money */
-        Slot.prototype.showLossMessage = function () {
+        Slot.prototype.showLossMessage = function (moneyLabel) {
             this.playerMoney -= this.playerBet;
+            this.updateMoney(moneyLabel);
             this.resetFruitTally();
+            return "You Lost...";
         };
         /* This function calculates the player's winnings, if any */
-        Slot.prototype.determineWinnings = function () {
+        Slot.prototype.determineWinnings = function (moneyLabel) {
             if (this.blanks == 0) {
                 if (this.grapes == 3 || this.bells == 2) {
                     this.winnings = this.playerBet * 10;
@@ -168,10 +196,10 @@ var objects;
                 else {
                     this.winnings = this.playerBet;
                 }
-                this.showWinMessage();
+                this.showWinMessage(moneyLabel);
             }
             else {
-                this.showLossMessage();
+                this.showLossMessage(moneyLabel);
             }
         };
         return Slot;

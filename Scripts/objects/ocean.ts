@@ -24,7 +24,7 @@ module objects {
 
         //public methods
         public Reset(): void {
-            this.y = -888;
+            this.y = -640;
         }
         public Destroy(): void {
 

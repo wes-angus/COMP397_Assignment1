@@ -1,26 +1,33 @@
 module objects {
     export class Slot extends objects.GameObject {
         //private vars
-        private _betLine: string[];
+
+        //GUI-related
+        private betString: string;
+        private betInput: HTMLInputElement;
+
+        //Spin logic-related
+        private playerBet: number;
+        private betLine: string[];
+        private winnings: number;
+        private grapes: number;
+        private bananas: number;
+        private oranges: number;
+        private cherries: number;
+        private bars: number;
+        private bells: number;
+        private sevens: number;
+        private blanks: number;
 
         //public props
         public playerMoney: number;
-        public winnings: number;
         public jackpot: number;
-        public playerBet: number;
-        public grapes: number;
-        public bananas: number;
-        public oranges: number;
-        public cherries: number;
-        public bars: number;
-        public bells: number;
-        public sevens: number;
-        public blanks: number;
 
         //constructor
-        constructor() {
+        constructor(moneyLabel: objects.Label) {
             super("slotMachine", false);
             this.Start();
+            this.updateMoney(moneyLabel);
         }
 
         //static methods
@@ -40,19 +47,46 @@ module objects {
             this.resetFruitTally();
         }
         public Destroy(): void {
-            
+
         }
         public Start(): void {
+            this.init();
             this.Reset();
         }
         public Update(): void {
-            this._betLine = this.Reels();
-            this.determineWinnings();
+        }
+
+        public updateBet(betLabel: objects.Label) {
+            if (this.betString != this.betInput.value) {
+                this.betString = this.betInput.value;
+                this.playerBet = parseInt(this.betString);
+                if (this.playerBet <= this.playerMoney && this.playerBet > 0) {
+                    betLabel.text = "Bet $" + this.betString;
+                }
+                else {
+                    betLabel.text = "Bet Invalid";
+                }
+            }
+        }
+
+        public updateMoney(moneyLabel: objects.Label) {
+            moneyLabel.text = "Money $" + this.playerMoney;
+        }
+
+        public spinClick(moneyLabel: objects.Label) {
+            this.betLine = this.Reels();
+            this.determineWinnings(moneyLabel);
         }
 
         //private methods
+        private init() {
+            this.x = 20;
+            this.y = 20;
+            this.betInput = document.getElementsByTagName("input")[0];
+        }
+
         /* Utility function to reset all fruit tallies */
-        private resetFruitTally():void {
+        private resetFruitTally(): void {
             this.grapes = 0;
             this.bananas = 0;
             this.oranges = 0;
@@ -64,7 +98,7 @@ module objects {
         }
 
         /* Utility function to reset the player stats */
-        private resetAll() :void {
+        private resetAll(): void {
             this.playerMoney = 1000;
             this.winnings = 0;
             this.jackpot = 5000;
@@ -129,20 +163,24 @@ module objects {
         }
 
         /* Utility function to show a win message and increase player money */
-        private showWinMessage():void {
+        private showWinMessage(moneyLabel: objects.Label): string {
             this.playerMoney += this.winnings;
+            this.updateMoney(moneyLabel);
             this.resetFruitTally();
             this.checkJackPot();
+            return "You Won: $" + this.winnings;
         }
 
         /* Utility function to show a loss message and reduce player money */
-        private showLossMessage():void {
+        private showLossMessage(moneyLabel: objects.Label): string {
             this.playerMoney -= this.playerBet;
+            this.updateMoney(moneyLabel);
             this.resetFruitTally();
+            return "You Lost...";
         }
 
         /* This function calculates the player's winnings, if any */
-        private determineWinnings():void {
+        private determineWinnings(moneyLabel: objects.Label): void {
             if (this.blanks == 0) {
                 if (this.grapes == 3 || this.bells == 2) {
                     this.winnings = this.playerBet * 10;
@@ -180,10 +218,10 @@ module objects {
                 else {
                     this.winnings = this.playerBet;
                 }
-                this.showWinMessage();
+                this.showWinMessage(moneyLabel);
             }
             else {
-                this.showLossMessage();
+                this.showLossMessage(moneyLabel);
             }
         }
     }
