@@ -18,7 +18,6 @@ var objects;
         //constructor
         function Slot() {
             var _this = _super.call(this, "slotMachine", false) || this;
-            _this.Grayscale = new createjs.ColorMatrixFilter(new createjs.ColorMatrix().adjustSaturation(-100));
             _this.Start();
             return _this;
         }
@@ -71,6 +70,10 @@ var objects;
             this.quitButton.on("click", function () {
                 managers.Game.currentState = config.Scene.START;
             });
+            this.betButton = new objects.Button("resetButton", 400, 625, true);
+            this.betButton.on("click", function () {
+                _this.betInput.focus();
+            });
             this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FF0000", 12, 550, false);
             this.messageLabel.lineWidth = 420;
             this.fruits = new Array();
@@ -108,7 +111,7 @@ var objects;
             else {
                 this.betLabel.text = "Bet Invalid";
                 this.spinButton.mouseEnabled = false;
-                this.spinButton.filters = [this.Grayscale];
+                this.spinButton.filters = [Slot.Grayscale];
                 this.spinButton.cache(this.x - this.HalfWidth, this.y - this.HalfHeight, this.Width, this.Height);
             }
         };
@@ -212,7 +215,6 @@ var objects;
         };
         /* Utility function to show a loss message and reduce player money */
         Slot.prototype.showLossMessage = function () {
-            this.playerMoney -= this.playerBet;
             if (this.playerMoney < 1) {
                 managers.Game.currentState = config.Scene.OVER;
             }
@@ -270,12 +272,14 @@ var objects;
         };
         Slot.prototype.spinClick = function () {
             this.betLine = this.Reels();
+            this.playerMoney -= this.playerBet;
             console.log(this.betLine);
             for (var i = 0; i < this.betLine.length; i++) {
                 this.fruits[i].setFruit(this.betLine[i]);
             }
             this.determineWinnings();
         };
+        Slot.Grayscale = new createjs.ColorMatrixFilter(new createjs.ColorMatrix().adjustSaturation(-100));
         return Slot;
     }(objects.GameObject));
     objects.Slot = Slot;

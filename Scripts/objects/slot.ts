@@ -31,8 +31,9 @@ module objects {
         public fruits: objects.Fruit[];
         public resetButton: objects.Button;
         public quitButton: objects.Button;
+        public betButton: objects.Button;
 
-        public Grayscale = new createjs.ColorMatrixFilter(new createjs.ColorMatrix().adjustSaturation(-100));
+        public static Grayscale = new createjs.ColorMatrixFilter(new createjs.ColorMatrix().adjustSaturation(-100));
 
         //constructor
         constructor() {
@@ -91,6 +92,10 @@ module objects {
             this.quitButton.on("click", () => {
                 managers.Game.currentState = config.Scene.START;
             });
+            this.betButton = new objects.Button("resetButton", 400, 625, true);
+            this.betButton.on("click", () => {
+                this.betInput.focus();
+            });
             this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FF0000", 12, 550, false);
             this.messageLabel.lineWidth = 420;
 
@@ -130,7 +135,7 @@ module objects {
             else {
                 this.betLabel.text = "Bet Invalid";
                 this.spinButton.mouseEnabled = false;
-                this.spinButton.filters = [this.Grayscale];
+                this.spinButton.filters = [Slot.Grayscale];
                 this.spinButton.cache(this.x - this.HalfWidth, this.y - this.HalfHeight, this.Width, this.Height);
             }
         }
@@ -244,7 +249,6 @@ module objects {
 
         /* Utility function to show a loss message and reduce player money */
         private showLossMessage(): void {
-            this.playerMoney -= this.playerBet;
             if (this.playerMoney < 1) {
                 managers.Game.currentState = config.Scene.OVER;
             }
@@ -304,6 +308,7 @@ module objects {
 
         private spinClick() {
             this.betLine = this.Reels();
+            this.playerMoney -= this.playerBet;
             console.log(this.betLine);
             for (let i = 0; i < this.betLine.length; i++) {
                 this.fruits[i].setFruit(<config.Fruit>this.betLine[i]);

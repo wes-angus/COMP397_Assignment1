@@ -39,6 +39,7 @@ namespace scenes {
       this.addChild(this._slot.resetButton);
       this.addChild(this._slot.quitButton);
       this.addChild(this._slot.messageLabel);
+      this.addChild(this._slot.betButton);
       this._slot.fruits.forEach(fruit => {
         this.addChild(fruit);
       });
