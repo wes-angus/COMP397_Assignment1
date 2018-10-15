@@ -1,3 +1,11 @@
+/**
+ * Author: Wesley Angus
+ * Student #: 300924221
+ * Description: A slot machine to waste all of your virtual money on!
+ *              Click spin after entering your bet to see how much you can win!
+ * Revision History: see https://github.com/wes-angus/COMP397_Assignment1
+ */
+
 module objects {
     export class Fruit extends objects.GameObject {
         //private vars

@@ -1,3 +1,11 @@
+/**
+ * Author: Wesley Angus
+ * Student #: 300924221
+ * Description: A slot machine to waste all of your virtual money on!
+ *              Click spin after entering your bet to see how much you can win!
+ * Revision History: see https://github.com/wes-angus/COMP397_Assignment1
+ */
+
 module scenes {
     export class Over extends objects.Scene {
         // private instance variable
@@ -20,7 +28,7 @@ module scenes {
         public Start(): void {
             this._gameOverLabel = new objects.Label("Out of Money!", "bold 60px", "Consolas", "#FFFF00", 320, 160, true);
             this._gameOverLabel2 = new objects.Label("Would you like to play again?", "32px", "Consolas", "#FFFF00", 320, 240, true);
-            this._restartButton = new objects.Button("restartButton", 320, 360, true);
+            this._restartButton = new objects.Button("restartButton", 320, 400, true);
             this._bg = new createjs.Bitmap(managers.Game.assetManager.getResult("skulls_bg"));
 
             this.Main();
