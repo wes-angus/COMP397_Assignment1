@@ -1,13 +1,13 @@
 module objects {
-    export class Ocean extends objects.GameObject {
+    export class Background extends objects.GameObject {
         //private inst. vars
         private _verticalSpeed: number;
 
         //public props
 
         //constructor
-        constructor() {
-            super("ocean", false);
+        constructor(imageString: string) {
+            super(imageString, false);
 
             this.Start();
         }
@@ -24,14 +24,14 @@ module objects {
 
         //public methods
         public Reset(): void {
-            this.y = -760;
+            this.y = -1224;
         }
         public Destroy(): void {
 
         }
         public Start(): void {
             this.Reset();
-            this._verticalSpeed = 5; //5px per frame
+            this._verticalSpeed = 3; //3px per frame
         }
         public Update(): void {
             this._move();

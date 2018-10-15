@@ -25,6 +25,7 @@ var scenes;
         // private methods
         // public methods
         Play.prototype.Start = function () {
+            this._bg = new createjs.Bitmap(managers.Game.assetManager.getResult("colorful-bg"));
             this._slot = new objects.Slot();
             this.Main();
         };
@@ -37,6 +38,7 @@ var scenes;
         Play.prototype.Reset = function () { };
         Play.prototype.Main = function () {
             var _this = this;
+            this.addChild(this._bg);
             // adds slot machine to the scene
             this.addChild(this._slot);
             this.addChild(this._slot.betLabel);

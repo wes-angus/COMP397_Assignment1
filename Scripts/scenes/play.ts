@@ -2,6 +2,7 @@ namespace scenes {
   export class Play extends objects.Scene {
     // private instance variables
     private _slot: objects.Slot;
+    private _bg: createjs.Bitmap;
 
     // public properties
 
@@ -15,6 +16,7 @@ namespace scenes {
 
     // public methods
     public Start(): void {
+      this._bg = new createjs.Bitmap(managers.Game.assetManager.getResult("colorful-bg"));
       this._slot = new objects.Slot();
       this.Main();
     }
@@ -30,6 +32,7 @@ namespace scenes {
     public Reset(): void { }
 
     public Main(): void {
+      this.addChild(this._bg);
       // adds slot machine to the scene
       this.addChild(this._slot);
       this.addChild(this._slot.betLabel);

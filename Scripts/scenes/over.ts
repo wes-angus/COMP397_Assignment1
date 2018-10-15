@@ -3,7 +3,7 @@ module scenes {
         // private instance variable
         private _gameOverLabel: objects.Label;
         private _gameOverLabel2: objects.Label;
-        private _ocean: objects.Ocean;
+        private _bg: createjs.Bitmap;
         private _restartButton: objects.Button;
 
         // public properties
@@ -18,18 +18,15 @@ module scenes {
 
         // public methods
         public Start(): void {
-            this._ocean = new objects.Ocean();
-            this._gameOverLabel = new objects.Label("Out of Money!", "60px", "Consolas", "#FFFF00", 320, 160, true);
+            this._gameOverLabel = new objects.Label("Out of Money!", "bold 60px", "Consolas", "#FFFF00", 320, 160, true);
             this._gameOverLabel2 = new objects.Label("Would you like to play again?", "32px", "Consolas", "#FFFF00", 320, 240, true);
             this._restartButton = new objects.Button("restartButton", 320, 360, true);
-            this._ocean.filters = [objects.Slot.Grayscale];
-            this._ocean.cache(this._ocean.x, this._ocean.y, this._ocean.Width * 2, this._ocean.Height * 2);
+            this._bg = new createjs.Bitmap(managers.Game.assetManager.getResult("skulls_bg"));
 
             this.Main();
         }
 
         public Update(): void {
-            this._ocean.Update();
         }
 
         public Destroy(): void {
@@ -43,7 +40,7 @@ module scenes {
         public Main(): void {
             // adds ocean to the stage
 
-            this.addChild(this._ocean);
+            this.addChild(this._bg);
             this.addChild(this._gameOverLabel);
             this.addChild(this._gameOverLabel2);
             this.addChild(this._restartButton);

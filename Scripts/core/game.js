@@ -8,11 +8,14 @@
     var currentState;
     var assetManifest = [
         { id: "startButton", src: "./Assets/images/startButton.png" },
+        { id: "betButton", src: "./Assets/images/betButton.png" },
         { id: "restartButton", src: "./Assets/images/restartButton.png" },
         { id: "spinButton", src: "./Assets/images/spinButton.png" },
         { id: "resetButton", src: "./Assets/images/resetButton.png" },
         { id: "quitButton", src: "./Assets/images/quitButton.png" },
-        { id: "ocean", src: "./Assets/images/ocean.gif" },
+        { id: "start-background", src: "./Assets/images/start-background.jpg" },
+        { id: "skulls_bg", src: "./Assets/images/skulls_bg.jpg" },
+        { id: "colorful-bg", src: "./Assets/images/colorful-background-rainbow.png" },
         { id: "slotMachine", src: "./Assets/images/slot-machine-clipart-transparent.png" },
         //Fruits
         { id: "apple", src: "./Assets/images/slot_machine_apple.png" },

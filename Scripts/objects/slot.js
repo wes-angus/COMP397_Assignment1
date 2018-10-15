@@ -57,9 +57,12 @@ var objects;
             this.x = 20;
             this.y = 40;
             this.betInput = document.getElementsByTagName("input")[0];
-            this.betLabel = new objects.Label("Bet: $000", "32px", "Arial", "#0000FF", 20, 60, false);
-            this.moneyLabel = new objects.Label("Money: $" + this.playerMoney, "32px", "Arial", "#0000FF", 420, 60, false);
-            this.jackpotLabel = new objects.Label("$" + this.jackpot, "32px", "Arial", "#0000FF", 300, 20, true);
+            this.betLabel = new objects.Label("Bet: $000", "32px", "Arial", "#FFFFFF", 20, 60, false);
+            this.betLabel.shadow = new createjs.Shadow("#000000", 5, 5, 10);
+            this.moneyLabel = new objects.Label("Money: $" + this.playerMoney, "32px", "Arial", "#FFFFFF", 420, 60, false);
+            this.moneyLabel.shadow = new createjs.Shadow("#000000", 5, 5, 10);
+            this.jackpotLabel = new objects.Label("$" + this.jackpot, "32px", "Arial", "#FFFFFF", 300, 20, true);
+            this.jackpotLabel.shadow = new createjs.Shadow("#000000", 5, 5, 10);
             this.spinButton = new objects.Button("spinButton", 580, 600, true);
             this.resetButton = new objects.Button("resetButton", 480, 590, true);
             this.resetButton.on("click", function () {
@@ -70,12 +73,13 @@ var objects;
             this.quitButton.on("click", function () {
                 managers.Game.currentState = config.Scene.START;
             });
-            this.betButton = new objects.Button("resetButton", 400, 625, true);
+            this.betButton = new objects.Button("betButton", 400, 610, true);
             this.betButton.on("click", function () {
                 _this.betInput.focus();
             });
-            this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FF0000", 12, 550, false);
-            this.messageLabel.lineWidth = 420;
+            this.messageLabel = new objects.Label("", "bold 48px", "Arial", "#FFFF00", 12, 550, false);
+            this.messageLabel.shadow = new createjs.Shadow("#000000", 5, 5, 10);
+            this.messageLabel.lineWidth = 365;
             this.fruits = new Array();
             var x = 0;
             var y = 0;

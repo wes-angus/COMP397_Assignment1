@@ -25,13 +25,13 @@ var scenes;
         // private methods
         // public methods
         Start.prototype.Start = function () {
-            this._ocean = new objects.Ocean();
-            this._welcomeLabel = new objects.Label("Slot Machine", "60px", "Consolas", "#FFFF00", 320, 240, true);
+            this._bg = new objects.Background("start-background");
+            this._welcomeLabel = new objects.Label("Slot Machine", "bold 60px", "Consolas", "#800000", 320, 240, true);
             this._startButton = new objects.Button("startButton", 320, 360, true);
             this.Main();
         };
         Start.prototype.Update = function () {
-            this._ocean.Update();
+            this._bg.Update();
         };
         Start.prototype.Destroy = function () {
             this.removeAllChildren();
@@ -40,7 +40,7 @@ var scenes;
         };
         Start.prototype.Main = function () {
             // adds ocean to the stage
-            this.addChild(this._ocean);
+            this.addChild(this._bg);
             this.addChild(this._welcomeLabel);
             this.addChild(this._startButton);
             this._startButton.on("click", function () {
